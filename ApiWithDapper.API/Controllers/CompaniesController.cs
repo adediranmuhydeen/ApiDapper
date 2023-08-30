@@ -18,7 +18,40 @@ namespace ApiWithDapper.API.Controllers
         [HttpGet("GetCompanies")]
         public async Task<ActionResult<List<Company>>> GetCompanies() 
         {
-            return Ok(await _repo.GetCompaniesAsync());
+            try
+            {
+                return Ok(await _repo.GetCompaniesAsync());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetCompanyById")]
+        public async Task<ActionResult<Company>> GetCompany(int id)
+        {
+            try
+            {
+                return Ok(await _repo.GetCompanyByIdAsync(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("AddCompany")]
+        public async Task<IActionResult> AddCompany(CompanyDto company)
+        {
+            try
+            {
+                return Ok(await _repo.AddCompany(company));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
