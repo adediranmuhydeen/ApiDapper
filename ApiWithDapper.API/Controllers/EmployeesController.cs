@@ -40,5 +40,31 @@ namespace ApiWithDapper.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("AddEmployee")]
+        public async Task<IActionResult> AddEmployee(int companyId, AddEmployeeDto dto)
+        {
+            try
+            {
+                return Ok(await _repo.AddEmployee(companyId, dto));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteEmployee(int id)
+        {
+            try
+            {
+                return Ok(await _repo.RemoveEmployeebyId(id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
