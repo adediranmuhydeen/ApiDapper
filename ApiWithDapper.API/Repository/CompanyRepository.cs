@@ -78,11 +78,18 @@ namespace ApiWithDapper.API.Repository
 
         public async Task<IEnumerable<Company>> GetCompaniesAsync()
         {
-            var query = "SELECT * FROM Companies";
+            var query = "SELECT * FROM Companies";            
 
-            using(var connection = _context.CreateConnection())
+            using (var connection = _context.CreateConnection())
             {
                 var companies = await connection.QueryAsync<Company>(query);
+                foreach (var company in companies)
+                {
+                    var secondQuery = "SELECT * FROM Employees WHERE CompanyId = @id";
+                    var parameter = new DynamicParameters();
+                    parameter.Add("id", company.Id);
+                    company.Employees = (await connection.QueryAsync<Employee>(secondQuery, parameter)).ToList();
+                }
                 return companies.ToList();
             }
         }
