@@ -74,11 +74,11 @@ namespace ApiWithDapper.API.Repository
             }
         }
 
-        public async Task<string> RemoveEmployeebyId(int id)
+        public async Task<string> RemoveEmployeebyId(int id, int companyId )
         {
             try
             {
-                var query = $"DELETE FROM Employees WHERE Id = {id}";
+                var query = $"DELETE FROM Employees WHERE Id = {id} and CompanyId = {companyId}";
                 using (var connection = _context.CreateConnection())
                 {
                     var result = await connection.ExecuteAsync(query);
