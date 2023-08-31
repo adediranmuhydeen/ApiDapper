@@ -42,11 +42,37 @@ namespace ApiWithDapper.API.Controllers
         }
 
         [HttpPost("AddCompany")]
-        public async Task<IActionResult> AddCompany(CompanyDto company)
+        public async Task<IActionResult> AddCompany([FromBody] CompanyDto company)
         {
             try
             {
                 return Ok(await _repo.AddCompany(company));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(typeof(Company));
+            }
+        }
+
+        [HttpDelete("DeleteById")]
+        public async Task<IActionResult> DeleteById(int id)
+        {
+            try
+            {
+                return Ok(await _repo.DeleteCompanyAsync(id));
+            }
+            catch(Exception ex)
+            {
+                return Ok("Not Successful");
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateCompany(int id, CompanyDto company)
+        {
+            try
+            {
+                return Ok(await _repo.UpdateComapny(id, company));
             }
             catch (Exception ex)
             {

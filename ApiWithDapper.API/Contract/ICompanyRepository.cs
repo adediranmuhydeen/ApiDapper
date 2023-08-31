@@ -6,6 +6,8 @@ namespace ApiWithDapper.API.Contract
     {
         Task<IEnumerable<Company>> GetCompaniesAsync();
         Task<Company> GetCompanyByIdAsync(int id);
-        Task<string> AddCompany(CompanyDto company);
+        Task<Company> AddCompany(CompanyDto company);
+        Task<string> DeleteCompanyAsync(int id);
+        Task<string> UpdateComapny(int id, CompanyDto dto);
     }
 }
