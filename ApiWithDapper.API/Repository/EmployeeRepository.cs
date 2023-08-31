@@ -2,6 +2,8 @@
 using ApiWithDapper.API.Contract;
 using ApiWithDapper.API.Entities;
 using Dapper;
+using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace ApiWithDapper.API.Repository
 {
@@ -14,12 +16,32 @@ namespace ApiWithDapper.API.Repository
             _context = context;
         }
 
-        public Task<Employee> AddEmployee(EmployeeDto dto)
+        public async Task<Employee> AddEmployee(int companyId, AddEmployeeDto dto)
         {
-            throw new NotImplementedException();
+            var query = "INSERT INTO Employees (CompanyId, Name, Position, Age) VALUES (@companyId, @Name, @Position, @Age)";
+            var parameter = new DynamicParameters();
+            parameter.Add("CompanyId", companyId, DbType.Int32);
+            parameter.Add("Name", dto.Name, DbType.String);
+            parameter.Add("Position", dto.Position, DbType.String);
+            parameter.Add("Age", dto.Age, DbType.Int32);
+            using(var connection = _context.CreateConnection())
+            {
+                var result = await connection.ExecuteAsync(query, parameter);
+                if(result< 1)
+                {
+                    return null;
+                }
+                return new Employee
+                {
+                    CompanyId = companyId,
+                    Name = dto.Name,
+                    Position = dto.Position,
+                    Age = dto.Age
+                };
+            }
         }
 
-        public Task<Employee> GetEmployeeByIdAsync(int id)
+        public async Task<Employee> GetEmployeeByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -52,9 +74,29 @@ namespace ApiWithDapper.API.Repository
             }
         }
 
-        public Task<string> RemoveEmployeebyId(int id)
+        public async Task<string> RemoveEmployeebyId(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = $"DELETE FROM Employees WHERE Id = {id}";
+                using (var connection = _context.CreateConnection())
+                {
+                    var result = await connection.ExecuteAsync(query);
+                    if (result < 1)
+                    {
+                        return "Not Successful";
+                    }
+                    return "Success";
+                }
+            }
+            catch (SqlException ex)
+            {
+                return ex.Message;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         public Task<string> UpdateEmployeeInformation(int Id, EmployeeDto dto)

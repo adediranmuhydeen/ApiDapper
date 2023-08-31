@@ -8,7 +8,7 @@ namespace ApiWithDapper.API.Contract
         Task<Employee> GetEmployeeByIdAsync(int id);
         Task<string> RemoveEmployeebyId(int id);
         Task<string> UpdateEmployeeInformation(int Id, EmployeeDto dto);
-        Task<Employee> AddEmployee(EmployeeDto dto);
+        Task<Employee> AddEmployee(int companyId, AddEmployeeDto dto);
         Task<IEnumerable<Employee>> GetEmployeesForACompany(int companyId);
     }
 }
