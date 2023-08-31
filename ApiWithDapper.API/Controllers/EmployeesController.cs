@@ -55,11 +55,11 @@ namespace ApiWithDapper.API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteEmployee(int id)
+        public async Task<IActionResult> DeleteEmployee(int id, int companyId)
         {
             try
             {
-                return Ok(await _repo.RemoveEmployeebyId(id));
+                return Ok(await _repo.RemoveEmployeebyId(id, companyId));
             }
             catch (Exception ex)
             {
