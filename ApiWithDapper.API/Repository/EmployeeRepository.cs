@@ -29,7 +29,7 @@ namespace ApiWithDapper.API.Repository
                 var result = await connection.ExecuteAsync(query, parameter);
                 if(result< 1)
                 {
-                    return null;
+                    return new Employee();
                 }
                 return new Employee
                 {
@@ -99,9 +99,63 @@ namespace ApiWithDapper.API.Repository
             }
         }
 
-        public Task<string> UpdateEmployeeInformation(int Id, EmployeeDto dto)
+        public async Task<Employee> GetCompanyEmployee(int id, int companyId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var query = "SELECT * FROM Employees WHERE Id = @id and CompanyId = @companyId";
+                var parameter = new DynamicParameters();
+                parameter.Add("Id", id);
+                parameter.Add("companyId", companyId);
+
+                using(var connection = _context.CreateConnection())
+                {
+                    var employee = await connection.QueryFirstOrDefaultAsync<Employee>(query);
+                    if(employee == null)
+                    {
+                        return new Employee();
+                    }
+                    return employee;
+                }
+            }
+            catch (SqlException ex)
+            {
+                return new Employee();
+            }
+            
         }
+
+        public async Task<string> UpdateEmployeeInformation(int id, int companyId, EmployeeDto dto)
+        {
+            var employee = await GetCompanyEmployee(id, companyId);
+            if (employee == null)
+            {
+                return "Not Successful";
+            }
+
+            var query = "UPDATE Employees SET CompanyId = @CompanyId, Name = @Name, Position = @Position, Age = @Age WHERE Id = @Id";
+
+            using (var connection = _context.CreateConnection())
+            {
+                var parameters = new
+                {
+                    Id = id,
+                    CompanyId = companyId,
+                    Name = dto.Name,
+                    Position = dto.Position,
+                    Age = dto.Age
+                };
+
+                var result = await connection.ExecuteAsync(query, parameters);
+
+                if (result < 1)
+                {
+                    return "Not Successful";
+                }
+
+                return "Success";
+            }
+        }
+
     }
 }

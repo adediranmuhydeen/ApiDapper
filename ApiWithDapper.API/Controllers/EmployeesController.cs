@@ -54,7 +54,7 @@ namespace ApiWithDapper.API.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("DeleteEmployee")]
         public async Task<IActionResult> DeleteEmployee(int id, int companyId)
         {
             try
@@ -66,5 +66,32 @@ namespace ApiWithDapper.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("UpdateEmployee")]
+        public async Task<IActionResult> UpdateEmployee(int id, int companyId, EmployeeDto dto)
+        {
+            try
+            {
+                return Ok(await _repo.UpdateEmployeeInformation(id, companyId, dto));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GeCompnyEmployee")]
+        public async Task<ActionResult<Employee>> GeCompnyEmployee(int id, int companyId)
+        {
+            try
+            {
+                return Ok(await _repo.GetCompanyEmployee(id, companyId));
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
