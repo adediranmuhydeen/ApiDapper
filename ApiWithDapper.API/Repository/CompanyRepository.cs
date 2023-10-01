@@ -99,7 +99,19 @@ namespace ApiWithDapper.API.Repository
             var query = $"SELECT * FROM Companies WHERE Id = {id}";
             using(var connection = _context.CreateConnection())
             {
-                var company = await connection.QueryFirstAsync<Company>(query);
+                var company = new Company();
+                try
+                {
+                    company = await connection.QueryFirstAsync<Company>(query);
+                }
+                catch (Exception ex)
+                {
+                    await Console.Out.WriteLineAsync(ex.Message);
+                }
+                var secondQuery = "SELECT * FROM Employees WHERE CompanyId = @id";
+                var parameter = new DynamicParameters();
+                parameter.Add("id", company.Id);
+                company.Employees = (await connection.QueryAsync<Employee>(secondQuery, parameter)).ToList();
                 return company;
             }
         }
