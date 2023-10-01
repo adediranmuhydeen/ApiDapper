@@ -31,14 +31,15 @@ namespace ApiWithDapper.API.Controllers
         [HttpGet("GetCompanyById")]
         public async Task<ActionResult<Company>> GetCompany(int id)
         {
-            try
-            {
-                return Ok(await _repo.GetCompanyByIdAsync(id));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            //try
+            //{
+            //    return Ok(await _repo.GetCompanyByIdAsync(id));
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest("Id does not exist");
+            //}
+            return Ok(await _repo.GetCompanyByIdAsync(id));
         }
 
         [HttpPost("AddCompany")]
